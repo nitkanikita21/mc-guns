@@ -1,9 +1,13 @@
 package com.nitka.mcguns;
 
+import com.nitka.mcguns.proxy.ClientProxy;
+import com.nitka.mcguns.proxy.CommonProxy;
+import com.nitka.mcguns.proxy.ServerProxy;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.fml.common.Mod;
@@ -25,27 +29,18 @@ public class McGuns
     // Directly reference a log4j logger.
     private static final Logger LOGGER = LogManager.getLogger();
 
+
     public McGuns() {
         // Регистрируем в модлоадере листенеры
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::processIMC);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
 
         // Регистрируем в евент бус этот класс как слушатель евентов
         MinecraftForge.EVENT_BUS.register(this);
-    }
+        MinecraftForge.EVENT_BUS.register(CommonProxy.class);
+        MinecraftForge.EVENT_BUS.register(ClientProxy.class);
+        MinecraftForge.EVENT_BUS.register(ServerProxy.class);
 
-    private void setup(final FMLCommonSetupEvent event)
-    {
-        // тут зетап код
-        LOGGER.info("HELLO FROM PREINIT");
-        LOGGER.info("DIRT BLOCK >> {}", Blocks.DIRT.getRegistryName());
-    }
-
-    private void doClientStuff(final FMLClientSetupEvent event) {
-        // готовность клиента
-        LOGGER.info("Got game settings {}", event.getMinecraftSupplier().get().options);
     }
 
     private void enqueueIMC(final InterModEnqueueEvent event)
@@ -61,13 +56,6 @@ public class McGuns
                 map(m->m.getMessageSupplier().get()).
                 collect(Collectors.toList()));
     }
-    // слушатель
-    @SubscribeEvent
-    public void onServerStarting(FMLServerStartingEvent event) {
-        //когда сервер запущен
-        LOGGER.info("HELLO from server starting");
-    }
-
 
 
     // Способ по проще подписать класс как слушатель
