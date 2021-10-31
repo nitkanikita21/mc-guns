@@ -1,13 +1,18 @@
 package com.nitka.mcguns;
 
+import com.nitka.mcguns.mod.items.basic.Weapon;
+import com.nitka.mcguns.mod.items.weapons.M4A4s;
 import com.nitka.mcguns.proxy.ClientProxy;
 import com.nitka.mcguns.proxy.CommonProxy;
 import com.nitka.mcguns.proxy.ServerProxy;
+import com.nitka.mcguns.register.ModRegister;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.item.Item;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.fml.common.Mod;
@@ -32,14 +37,20 @@ public class McGuns
 
     public McGuns() {
         // Регистрируем в модлоадере листенеры
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::processIMC);
+        IEventBus BUS = FMLJavaModLoadingContext.get().getModEventBus();
+        BUS.addListener(this::enqueueIMC);
+        BUS.addListener(this::processIMC);
 
         // Регистрируем в евент бус этот класс как слушатель евентов
         MinecraftForge.EVENT_BUS.register(this);
         MinecraftForge.EVENT_BUS.register(CommonProxy.class);
         MinecraftForge.EVENT_BUS.register(ClientProxy.class);
         MinecraftForge.EVENT_BUS.register(ServerProxy.class);
+
+        ModRegister.init();
+
+        ModRegister.register(BUS);
+        ModRegister.registerItem("m4a4s",new Weapon());
 
     }
 
@@ -55,19 +66,5 @@ public class McGuns
         LOGGER.info("Got IMC {}", event.getIMCStream().
                 map(m->m.getMessageSupplier().get()).
                 collect(Collectors.toList()));
-    }
-
-
-    // Способ по проще подписать класс как слушатель
-
-    // You can use EventBusSubscriber to automatically subscribe events on the contained class (this is subscribing to the MOD
-    // Event bus for receiving Registry Events)
-    @Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.MOD)
-    public static class RegistryEvents {
-        @SubscribeEvent
-        public static void onBlocksRegistry(final RegistryEvent.Register<Block> blockRegistryEvent) {
-            // регистрация новых блоков
-            LOGGER.info("HELLO from Register Block");
-        }
     }
 }

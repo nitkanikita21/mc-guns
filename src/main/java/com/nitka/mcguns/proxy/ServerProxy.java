@@ -10,5 +10,7 @@ public class ServerProxy {
     @SubscribeEvent
     public static void init(final FMLServerAboutToStartEvent e){
         System.out.println("Привет из сервера");
+
+        //
     }
 }
