@@ -1,7 +1,11 @@
 package com.nitka.mcguns.register;
 
 import com.nitka.mcguns.mod.items.ModTab;
+import com.nitka.mcguns.mod.items.basic.ObjectModelItem;
 import com.nitka.mcguns.mod.items.basic.Weapon;
+import com.nitka.mcguns.mod.items.parts.m4a4s.M4A4s_Base;
+import com.nitka.mcguns.mod.items.weapons.Glock15;
+import com.nitka.mcguns.mod.items.weapons.M4A4s;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -17,11 +21,6 @@ import java.util.HashMap;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModRegister {
-
-
-    private static HashMap<String,RegistryObject<Item>> modItems = new HashMap<>();
-    private static HashMap<String,RegistryObject<Block>> modBlocks = new HashMap<>();
-
     //Регистратор для предметов
     public static final DeferredRegister<Item> ITEMS
             = DeferredRegister.create(ForgeRegistries.ITEMS, "mcguns");
@@ -30,23 +29,32 @@ public class ModRegister {
     public static final DeferredRegister<Block> BLOCKS
             = DeferredRegister.create(ForgeRegistries.BLOCKS, "mcguns");
 
+    //public static final RegistryObject<Item> m4a4s = ITEMS.register("m4a4s",() -> new M4A4s());
+    //public static final RegistryObject<Item> glock15 = ITEMS.register("glock15",() -> new Weapon());
+
+    public static HashMap<String, RegistryObject<Item>> modItems = new HashMap<>();
+
+    public static class TABS {
+        public static ModTab WEAPON = new ModTab("weapons");
+        public static ModTab OTHER  = new ModTab("other");
+    }
+
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);
         BLOCKS.register(eventBus);
     }
 
-    //Зарегать предмет
-    public static void registerItem(String id,Item item){
-        modItems.put(id,ITEMS.register(id,() -> item));
-    }
+    public static void init(IEventBus eventBus){
+        ModRegister.register(eventBus);
 
-    //Зарегать блок
-    public static void registerBlock(String id,Block block){
-        modBlocks.put(id,BLOCKS.register(id,() -> block));
-    }
+        modItems.put("weapon_hand",ITEMS.register("weapon_hand", ObjectModelItem::new));
+        modItems.put("m4a4s_firstperson",ITEMS.register("m4a4s_firstperson", ObjectModelItem::new));
 
-    public static void init(){
+        modItems.put("m4a4s_base",ITEMS.register("m4a4s_base", M4A4s_Base::new));
 
+
+        modItems.put("m4a4s",ITEMS.register("m4a4s", M4A4s::new));
+        modItems.put("glock15",ITEMS.register("glock15", Glock15::new));
     }
 
     @SubscribeEvent

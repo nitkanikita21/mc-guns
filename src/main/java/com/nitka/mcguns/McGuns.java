@@ -40,18 +40,17 @@ public class McGuns
         IEventBus BUS = FMLJavaModLoadingContext.get().getModEventBus();
         BUS.addListener(this::enqueueIMC);
         BUS.addListener(this::processIMC);
+        BUS.addListener(CommonProxy::init);
+        BUS.addListener(ClientProxy::init);
+
 
         // Регистрируем в евент бус этот класс как слушатель евентов
         MinecraftForge.EVENT_BUS.register(this);
-        MinecraftForge.EVENT_BUS.register(CommonProxy.class);
-        MinecraftForge.EVENT_BUS.register(ClientProxy.class);
-        MinecraftForge.EVENT_BUS.register(ServerProxy.class);
+        //MinecraftForge.EVENT_BUS.register(CommonProxy.class);
+        //MinecraftForge.EVENT_BUS.register(ClientProxy.class);
+        //MinecraftForge.EVENT_BUS.register(ServerProxy.class);
 
-        ModRegister.init();
-
-        ModRegister.register(BUS);
-        ModRegister.registerItem("m4a4s",new Weapon());
-
+        ModRegister.init(BUS);
     }
 
     private void enqueueIMC(final InterModEnqueueEvent event)
