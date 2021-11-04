@@ -1,4 +1,4 @@
-package com.nitka.mcguns.mod.items;
+package com.nitka.mcguns.mod;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;

@@ -1,14 +1,16 @@
 package com.nitka.mcguns.register;
 
-import com.nitka.mcguns.mod.items.ModTab;
+import com.nitka.mcguns.mod.GUI.WeaponWorkbenchContainer;
+
+import com.nitka.mcguns.mod.ModTab;
 import com.nitka.mcguns.mod.items.basic.ObjectModelItem;
-import com.nitka.mcguns.mod.items.basic.Weapon;
 import com.nitka.mcguns.mod.items.parts.m4a4s.M4A4s_Base;
 import com.nitka.mcguns.mod.items.weapons.Glock15;
 import com.nitka.mcguns.mod.items.weapons.M4A4s;
 import net.minecraft.block.Block;
+import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -46,7 +48,15 @@ public class ModRegister {
 
     public static void init(IEventBus eventBus){
         ModRegister.register(eventBus);
+    }
 
+    @SubscribeEvent
+    public static void onBlockRegistry(final RegistryEvent.Register<Block> blockRegistryEvent){
+
+    }
+
+    @SubscribeEvent
+    public static void onItemRegistry(final RegistryEvent.Register<Item> itemRegistryEvent){
         modItems.put("weapon_hand",ITEMS.register("weapon_hand", ObjectModelItem::new));
         modItems.put("m4a4s_firstperson",ITEMS.register("m4a4s_firstperson", ObjectModelItem::new));
 
@@ -58,12 +68,9 @@ public class ModRegister {
     }
 
     @SubscribeEvent
-    public static void onBlockRegistry(final RegistryEvent.Register<Block> blockRegistryEvent){
-
-    }
-
-    @SubscribeEvent
-    public static void onItemRegistry(final RegistryEvent.Register<Item> itemRegistryEvent){
-
+    public static void onContainerRegistry(RegistryEvent.Register<ContainerType<?>> event){
+        event.getRegistry().register(IForgeContainerType.create((windowId, inv, data) -> {
+            return new WeaponWorkbenchContainer();
+        }));
     }
 }
