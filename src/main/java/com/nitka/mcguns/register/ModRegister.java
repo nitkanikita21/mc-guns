@@ -3,6 +3,7 @@ package com.nitka.mcguns.register;
 import com.nitka.mcguns.mod.GUI.WeaponWorkbenchContainer;
 
 import com.nitka.mcguns.mod.ModTab;
+import com.nitka.mcguns.mod.blocks.WeaponWorkbenchBlock;
 import com.nitka.mcguns.mod.items.basic.ObjectModelItem;
 import com.nitka.mcguns.mod.items.parts.m4a4s.M4A4s_Base;
 import com.nitka.mcguns.mod.items.weapons.Glock15;
@@ -35,6 +36,7 @@ public class ModRegister {
     //public static final RegistryObject<Item> glock15 = ITEMS.register("glock15",() -> new Weapon());
 
     public static HashMap<String, RegistryObject<Item>> modItems = new HashMap<>();
+    public static HashMap<String, RegistryObject<Block>> modBlocks = new HashMap<>();
 
     public static class TABS {
         public static ModTab WEAPON = new ModTab("weapons");
@@ -48,6 +50,17 @@ public class ModRegister {
 
     public static void init(IEventBus eventBus){
         ModRegister.register(eventBus);
+
+        modItems.put("weapon_hand",ITEMS.register("weapon_hand", ObjectModelItem::new));
+        modItems.put("m4a4s_firstperson",ITEMS.register("m4a4s_firstperson", ObjectModelItem::new));
+
+        modItems.put("m4a4s_base",ITEMS.register("m4a4s_base", M4A4s_Base::new));
+
+
+        modItems.put("m4a4s",ITEMS.register("m4a4s", M4A4s::new));
+        modItems.put("glock15",ITEMS.register("glock15", Glock15::new));
+
+        modBlocks.put("weapon_workbench",BLOCKS.register("weapon_workbench",WeaponWorkbenchBlock::new));
     }
 
     @SubscribeEvent
@@ -57,20 +70,11 @@ public class ModRegister {
 
     @SubscribeEvent
     public static void onItemRegistry(final RegistryEvent.Register<Item> itemRegistryEvent){
-        modItems.put("weapon_hand",ITEMS.register("weapon_hand", ObjectModelItem::new));
-        modItems.put("m4a4s_firstperson",ITEMS.register("m4a4s_firstperson", ObjectModelItem::new));
 
-        modItems.put("m4a4s_base",ITEMS.register("m4a4s_base", M4A4s_Base::new));
-
-
-        modItems.put("m4a4s",ITEMS.register("m4a4s", M4A4s::new));
-        modItems.put("glock15",ITEMS.register("glock15", Glock15::new));
     }
 
     @SubscribeEvent
     public static void onContainerRegistry(RegistryEvent.Register<ContainerType<?>> event){
-        event.getRegistry().register(IForgeContainerType.create((windowId, inv, data) -> {
-            return new WeaponWorkbenchContainer();
-        }));
+        //event.getRegistry().register(IForgeContainerType.create((windowId, inv, data) -> new WeaponWorkbenchContainer(windowId)));
     }
 }
